@@ -68,12 +68,12 @@ def parse_tables(content):
     for table in wikitables[:-1]:
         for tr in table.findAll('tr')[2:]:
             name = tr.find('th').find('a').string.encode('utf-8').replace('at-large', '').replace("\xc2\xa0", '')
-            number = re.search('\d{1,3}',s)
+            number = re.search('\d{1,3}',name)
             if number is None:
-                number = 0;
+                number = 0
             else:
                 number = number.group(0)
-            code = lookup[re.search('[^\d]+', name).group(0)] + '-' + number
+            code = lookup[re.search('[^\d]+', name).group(0)] + '-' + str(number)
             print code
             results = str(tr.findAll('td')[-1])
             rep = results[results.find('(Republican)') + 13:results.find('(Republican)') + 17]
