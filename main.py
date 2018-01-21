@@ -1,13 +1,22 @@
 import requests
 from bs4 import BeautifulSoup
 
-WIKI_URL = "https://en.wikipedia.org/wiki/United_States_House_of_Representatives_elections,_2016"
 
-req = requests.get(WIKI_URL)
-content = req.content[req.content.find('<span class="mw-headline" id="Complete_list_of_elections">Complete list of elections</span>'):]
-soup = BeautifulSoup(content, 'lxml')
-table_classes = {"class": ["sortable", "wikitable"]}
-wikitables = soup.findAll("table", table_classes)
+def parse_tables(content):
+    soup = BeautifulSoup(content, 'lxml')
+    print('bs parsed')
+    table_classes = {"class": ["sortable", "wikitable"]}
+    wikitables = soup.findAll("table", table_classes)
 
-print len(wikitables)
-print wikitables[0]
+    for table in wikitables[:-1]:
+        analyze_table(table)
+
+
+def analyze_table(table):
+    info = {}
+    for tr in table.findAll('tr')[2:]:
+        print tr.find('th').find('a').string.encode('utf-8').replace('at-large', '').replace("\xc2\xa0", '')
+
+if __name__ == '__main__':
+    with open('wiki.html') as f:
+        parse_tables(f.read())
