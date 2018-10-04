@@ -1,5 +1,0 @@
-import pandas as pd
-
-df = pd.read_excel('districts.xlsx')
-
-print df.loc[df['LINE_NUMBER'] == 122]
